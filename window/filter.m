@@ -1,0 +1,61 @@
+%低通滤波器
+wp=0.3;
+ws=0.5;
+wc=(wp+ws)/2;
+delta_w=ws-wp;
+N=ceil(6.6/delta_w);
+hn=fir1(N-1,wc,'low',hamming(N));
+omega=linspace(0,pi,512);
+mag=freqz(hn,1,omega);
+magdb=20*log10(abs(mag));
+figure(1);
+stem([0:N-1],hn,'.');
+grid on;
+axis([0 N-1 -0.2 0.5]);
+xlabel('n');
+ylabel('h(n)');title('单位抽样响应');
+figure(2);
+plot(omega/pi,magdb);
+grid 
+axis([0 1 -100 10]);
+xlabel('\omega/\pi');
+ylabel('db');title('幅频响应');
+%高通滤波器
+wc=0.5;
+alpha=20;
+N=2*alpha+1;
+hn=fir1(N-1,wc,'high',hamming(N))
+omega=linspace(0,pi,512);
+mag=freqz(hn,1,omega);
+magdb=20*log10(abs(mag));
+figure(3);
+stem([0:N-1],hn,'.');
+grid on;
+axis([0 N-1 -0.2 0.5]);
+xlabel('n');
+ylabel('h(n)');title('单位抽样响应');
+figure(4);
+plot(omega/pi,magdb); 
+grid on;
+axis([0 1 -100 10]);
+xlabel('\omega/\pi');
+ylabel('db');title('幅频响应');
+%多通带滤波器
+wc=[0.1 0.3 0.5 0.7 0.9];
+N=51;
+hn=fir1(N-1,wc,'DC-1',hamming(N));
+omega=linspace(0,pi,512);
+mag=freqz(hn,1,omega);
+magdb=20*log10(abs(mag));
+figure(5);
+stem([0:N-1],hn,'.');
+grid on;
+axis([0 N-1 -0.2 0.5]);
+xlabel('n');
+ylabel('h(n)');title('单位抽样响应');
+figure(6);
+plot(omega/pi,magdb);
+grid on;
+axis([0 1 -100 10]);
+xlabel('\omega/\pi');
+ylabel('db');title('幅频响应');

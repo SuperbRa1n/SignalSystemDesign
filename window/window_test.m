@@ -1,0 +1,105 @@
+clear all;clc;close all;
+N=251;
+n0=(N-1)/2;
+hn=zeros(1,N);
+%向右平移解决非因果问题
+for i=1:N
+    if i==n0+1
+        hn(i)=0;
+    else
+        if mod(i-(n0+1),2)==1
+            hn(i)=2/(pi*(i-1-n0));
+        end
+    end
+end
+hn=hn.*hamming(length(hn))';
+%验证函数1-cos(\pit)
+T=0.01;
+t=0:T:100;
+x=cos(pi*t);
+hx=conv(x,hn,'same');
+A=(abs(x).^2+abs(hx).^2).^0.5;
+phase=atan2(hx,x);
+figure(1)
+subplot(4,1,1)
+plot(t,x,t,hx);
+axis([0,10,-inf,inf]);
+title('cos(\pit)—x和H(x)')
+subplot(4,1,2)
+plot(t,A);
+title('幅度')
+subplot(4,1,3)
+plot(t,phase);
+axis([0,100,-inf,inf]);
+title('相位');
+subplot(4,1,4)
+plot(t,A.*cos(phase));
+axis([0,100,-1,1]);
+title('Acos(phase)')
+hold on;
+%验证函数2-tcos(\pit)
+y=t.*cos(2*pi*0.5*t);
+hx=conv(y,hn,'same');
+A=(abs(y).^2+abs(hx).^2).^0.5;
+phase=atan2(hx,y);
+figure(2)
+subplot(4,1,1)
+plot(t,y,t,hx);
+axis([0,100,-inf,inf]);
+title('tcos(\pit)—x和H(x)')
+subplot(4,1,2)
+plot(t,A);
+title('幅度')
+subplot(4,1,3)
+plot(t,phase);
+axis([0,100,-inf,inf]);
+title('相位');
+subplot(4,1,4)
+plot(t,A.*cos(phase));
+axis([0,100,-100,100]);
+title('Acos(phase)')
+hold on;
+%验证函数3-cos(\pit)/(t+1)
+z=cos(2*pi*0.5*t)./(t+1);
+hx=conv(z,hn,'same');
+A=(abs(z).^2+abs(hx).^2).^0.5;
+phase=atan2(hx,z);
+figure(3)
+subplot(4,1,1)
+plot(t,z,t,hx);
+axis([0,10,-inf,inf]);
+title('cos(\pit)/(t+1)—x和H(x)')
+subplot(4,1,2)
+plot(t,A);
+title('幅度')
+subplot(4,1,3)
+plot(t,phase);
+axis([0,100,-inf,inf]);
+title('相位');
+subplot(4,1,4)
+plot(t,A.*cos(phase));
+axis([0,100,-0.5,1]);
+title('Acos(phase)')
+hold on;
+%验证函数4-cos(0.02\pit)cos(10\pit+0.01t)
+u=cos(2*pi*0.01*t).*cos(2*pi*5*t+0.01*t);
+hx=conv(u,hn,'same');
+A=(abs(u).^2+abs(hx).^2).^0.5;
+phase=atan2(hx,u);
+figure(4)
+subplot(4,1,1)
+plot(t,u,t,hx);
+axis([49,51,-inf,inf]);
+title('cos(0.02\pit)cos(10\pit+0.01t)—x和H(x)')
+subplot(4,1,2)
+plot(t,A);
+title('幅度')
+subplot(4,1,3)
+plot(t,phase);
+axis([49,51,-inf,inf]);
+title('相位');
+subplot(4,1,4)
+plot(t,A.*cos(phase));
+axis([49,51,-1,1]);
+title('Acos(phase)')
+hold on;
